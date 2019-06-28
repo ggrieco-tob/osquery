@@ -93,9 +93,9 @@ function(generateOsqueryUtilsUtilstestsTest)
 
   set(source_files
     tests/base64.cpp
-    tests/chars.cpp
-    tests/map_take.cpp
-    tests/scope_guard.cpp
+    #tests/chars.cpp
+    #tests/map_take.cpp
+    #tests/scope_guard.cpp
   )
 
   add_osquery_executable(osquery_utils_utilstests-test ${source_files})
@@ -103,8 +103,11 @@ function(generateOsqueryUtilsUtilstestsTest)
   target_link_libraries(osquery_utils_utilstests-test PRIVATE
     global_cxx_settings
     osquery_utils
-    thirdparty_googletest
+    #thirdparty_googletest
+    thirdparty_deepstate
   )
+
+  target_compile_options(osquery_utils_utilstests-test PRIVATE -mno-avx)
 endfunction()
 
 osqueryUtilsMain()

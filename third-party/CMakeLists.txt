@@ -16,6 +16,7 @@ function(osqueryThirdpartyMain)
   add_subdirectory("glibc")
   add_subdirectory("glog")
   add_subdirectory("googletest")
+  add_subdirectory("deepstate")
   add_subdirectory("jinja2")
   add_subdirectory("libarchive")
   add_subdirectory("libaudit")
@@ -49,6 +50,29 @@ function(osqueryThirdpartyMain)
   add_subdirectory("zlib")
   add_subdirectory("zstd")
 endfunction()
+
+
+# Generates a target named identifier_downloader that will acquire the remote file while also verifying
+# its hash
+function(downloadRemoteFile2 identifier base_url file_name hash)
+  set(destination "${CMAKE_CURRENT_BINARY_DIR}/${file_name}")
+  set(url "${base_url}")
+
+  set(command_prefix "${EX_TOOL_PYTHON2_EXECUTABLE_PATH}")
+
+  add_custom_command(
+    OUTPUT "${destination}"
+    COMMAND ${command_prefix} "${CMAKE_SOURCE_DIR}/tools/cmake/downloader.py" "${base_url}" "${destination}" "${hash}"
+    COMMENT "Downloading: ${url}"
+    VERBATIM
+  )
+
+  add_custom_target("${identifier}_downloader" DEPENDS "${destination}")
+  set(downloadRemoteFile_destination "${destination}" PARENT_SCOPE)
+endfunction()
+
+
+
 
 # Generates a target named identifier_downloader that will acquire the remote file while also verifying
 # its hash
